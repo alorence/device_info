@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "device-info"
+version = "0.1.0"
+description = ""
+authors = ["Antoine Lorence <alorence@flokod.com>"]
+readme = "README.md"
+
+[tool.poetry-exec-plugin.commands]
+lint = "ruff ."
+lint_fix = "ruff . --fix"
+build = "pyinstaller --onefile --name device_info main.py"
+
+[tool.poetry.dependencies]
+python = "^3.11,<3.13"
+aiohttp = "^3.9.1"
+
+[tool.poetry.group.dev.dependencies]
+pyinstaller = "^6.3.0"
+ruff = "^0.1.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
