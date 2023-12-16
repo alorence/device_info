@@ -1,15 +1,13 @@
 import asyncio
 import logging
 import urllib.parse
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from json import JSONDecodeError
-from typing import Callable, Iterable
 
-from aiohttp import ClientSession, ClientConnectionError, ClientResponse
+from aiohttp import ClientConnectionError, ClientResponse, ClientSession
 
-logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
-)
+logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 
 log = logging.getLogger()
 
@@ -56,9 +54,7 @@ async def aget(sess: ClientSession, config: RemoteApiConfig) -> dict:
 
 async def get_publics_ips(ip_configs: Iterable[RemoteApiConfig]):
     async with ClientSession() as sess:
-        results: tuple[dict] = await asyncio.gather(
-            *(aget(sess, config) for config in ip_configs)
-        )
+        results: tuple[dict] = await asyncio.gather(*(aget(sess, config) for config in ip_configs))
         result = {
             urllib.parse.urlparse(config.url).hostname: result_dict.get("error") or result_dict["value"]
             for config, result_dict in zip(ip_configs, results)
@@ -69,8 +65,8 @@ async def get_publics_ips(ip_configs: Iterable[RemoteApiConfig]):
 async def main():
     log.info("Welcome !")
     ipv4, ipv6 = await asyncio.gather(get_publics_ips(ipv4_configs), get_publics_ips(ipv6_configs))
-    log.info(f"Public IPv4: {ipv4}")
-    log.info(f"Public IPv6: {ipv6}")
+    log.info("Public IPv4: %s", ipv4)
+    log.info("Public IPv6: %s", ipv6)
 
 
 def entrypoint():
